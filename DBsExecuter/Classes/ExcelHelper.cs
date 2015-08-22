@@ -11,11 +11,17 @@ namespace DBsExecuter.Classes
 {
     static class ExcelHelper
     {
-        static void FillExcel(string pathToExcel, List<Statistic> report)
+        public static void FillExcel(string pathToDirecory, List<Statistic> report)
         {
-            using (var excl=new ExcelPackage(new FileInfo(pathToExcel)))
+            string pathToExcl = Path.Combine(pathToDirecory, DateTime.Now+".xls");
+            using (var excl = new ExcelPackage(new FileInfo(pathToExcl)))
             {
                 ExcelWorksheet ws = excl.Workbook.Worksheets.Add("1");
+                for (int i = 1; i <= 3; i++)
+                {
+                    ws.Cells[i, i].Value = 1;
+                }
+                excl.Save();
             }
         }
     }
