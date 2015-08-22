@@ -23,6 +23,7 @@ namespace DBsExecuter
             var conns=AccessHelper.GetConnsStrings(@"C:\Users\iluxa1810\Documents\visual studio 2015\Projects\DBsExecuter\DBsExecuter\dbs\");
             List<Statistic> stat =new List<Statistic>();
             AccessHelper.ExecuteCommands(conns, pck, stat);
+            ExcelHelper.FillExcel(@"D:\Laba1.xls", stat);
         }
     }
 }
