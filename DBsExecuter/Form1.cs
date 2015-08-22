@@ -14,6 +14,7 @@ namespace DBsExecuter
     {
         public Form1()
         {
+            1=1
             InitializeComponent();
         }
     }
