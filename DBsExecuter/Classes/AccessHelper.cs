@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Forms;
 namespace DBsExecuter.Classes
 {
     class Statistic
@@ -14,14 +14,13 @@ namespace DBsExecuter.Classes
         public string CmdName { get; set; }
         public string CmdType { get; set; }
         public int Cnt { get; set; }
-
     }
     static class AccessHelper
     {
         public static List<OleDbConnectionStringBuilder> GetConnsStrings(string pathToDb)
         {
             var oleDb = new List<OleDbConnectionStringBuilder>();
-            foreach (var file in Directory.GetFiles(pathToDb,"*.mdb"))
+            foreach (var file in Directory.GetFiles(pathToDb, "*.mdb"))
             {
                 oleDb.Add(
                     new OleDbConnectionStringBuilder()
@@ -33,7 +32,7 @@ namespace DBsExecuter.Classes
             }
             return oleDb;
         }
-        public static void ExecuteCommands(List<OleDbConnectionStringBuilder> connsStr, Package commands, List<Statistic> report)
+        public static void ExecuteCommands(List<OleDbConnectionStringBuilder> connsStr, Package commands, List<Statistic> report, RichTextBox logBox)
         {
             foreach (var connStr in connsStr)
             {
@@ -48,16 +47,27 @@ namespace DBsExecuter.Classes
                             CmdType = command.QueryType,
                             DbName = Path.GetFileName(conn.DataSource)
                         });
+                        Form1.Logger($"DBName:{Path.GetFileName(conn.DataSource)}\n QueryName: {command.QueryName}", logBox);
                         OleDbCommand cmd = new OleDbCommand(command.Query, conn);
-                        if (command.QueryType == "UPDATE")
+                        try
                         {
-                            report[report.Count - 1].Cnt = cmd.ExecuteNonQuery();
-                            continue;
+                            if (command.QueryType == "UPDATE")
+                            {
+                                report[report.Count - 1].Cnt = cmd.ExecuteNonQuery();
+                                continue;
+                            }
+                            if (command.QueryType == "SCALAR")
+                            {
+                                report[report.Count - 1].Cnt = (int)cmd.ExecuteScalar();
+                            }
                         }
-                        if (command.QueryType == "SCALAR")
+                        catch (Exception ex)
                         {
-                            report[report.Count - 1].Cnt = (int)cmd.ExecuteScalar();
+                            Form1.Logger("Status: Fail", logBox);
+                            Form1.Logger(ex.ToString(), logBox);
+                            report[report.Count - 1].Cnt = -1;
                         }
+                        Form1.Logger("Status: Done", logBox);
                     }
                 }
             }

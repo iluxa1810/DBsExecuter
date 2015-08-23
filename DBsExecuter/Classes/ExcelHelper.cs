@@ -13,13 +13,22 @@ namespace DBsExecuter.Classes
     {
         public static void FillExcel(string pathToDirecory, List<Statistic> report)
         {
-            string pathToExcl = Path.Combine(pathToDirecory, DateTime.Now+".xls");
+            string pathToExcl = Path.Combine(pathToDirecory, DateTime.Now.Ticks+".xls");
             using (var excl = new ExcelPackage(new FileInfo(pathToExcl)))
             {
+                int i = 2;
                 ExcelWorksheet ws = excl.Workbook.Worksheets.Add("1");
-                for (int i = 1; i <= 3; i++)
+                ws.Cells[1, 1].Value = "DbName";
+                ws.Cells[1, 2].Value = "CmdName";
+                ws.Cells[1, 3].Value = "CmdType";
+                ws.Cells[1, 4].Value = "Cnt";
+                foreach (var rep in report)
                 {
-                    ws.Cells[i, i].Value = 1;
+                    ws.Cells[i, 1].Value = rep.DbName;
+                    ws.Cells[i, 2].Value = rep.CmdName;
+                    ws.Cells[i, 3].Value = rep.CmdType;
+                    ws.Cells[i, 4].Value = rep.Cnt;
+                    i++;
                 }
                 excl.Save();
             }
