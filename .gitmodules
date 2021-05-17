@@ -1,0 +1,3 @@
+[submodule "DictService"]
+	path = DictService
+	url = https://github.com/iluxa1810/DictService
