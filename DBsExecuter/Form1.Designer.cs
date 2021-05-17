@@ -3,7 +3,7 @@
     partial class Form1
     {
         /// <summary>
-        /// Required designer variable.
+        /// Required designer variable1.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
