@@ -9,6 +9,9 @@ using OfficeOpenXml;
 
 namespace DBsExecuter.Classes
 {
+    /// <summary>
+    /// 2123
+    /// </summary>
     static class ExcelHelper
     {
         public static void FillExcel(string pathToDirecory, List<Statistic> report)
